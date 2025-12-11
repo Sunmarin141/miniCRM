@@ -1,11 +1,13 @@
 <template>
     <div>
-        <button>{{value}}</button>
+        <button v-on:click="$emit('state',value)">{{value}}</button>
         
     </div>
 </template>
 
 <script setup>
+const emit = defineEmits(['state'])
+
 defineProps({
     value:String, 
 })
@@ -13,7 +15,6 @@ defineProps({
 
 <style scoped>
 button{
-    margin-top:20px ;
     width: 100%;
     padding: 10px;
     

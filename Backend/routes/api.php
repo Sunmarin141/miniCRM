@@ -9,3 +9,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/goods',[GoodController::class,'getAllGoods']);
+
+Route::get('/goods/{id}',[GoodController::class,'show']);

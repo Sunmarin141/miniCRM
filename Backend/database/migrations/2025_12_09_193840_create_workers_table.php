@@ -18,7 +18,7 @@ return new class extends Migration
             $table->tinyText('first_name');
             $table->tinyText('second_name');
             $table->tinyText('third_name');
-            $table->foreignId('position_id')->constrained()->onDelete('cascade');
+            $table->foreignId('position_id')->constrained()->nullbale()->onDelete('set null')->onUpdate('cascade');
             $table->tinyText('monthly_earnings');
             $table->foreignId('store_id')->constrained()->onDelete('cascade');
         });

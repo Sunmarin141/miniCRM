@@ -20,9 +20,5 @@ import ButtonsContainer from './ButtonsContainer.vue';
     margin: 5px;
     border: 1px dotted gray;
 }
-.buttons-container{
-    display: flex;
-    width: 100%;
-    gap: 10px;
-}
+
 </style>
