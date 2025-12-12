@@ -1,20 +1,12 @@
 <template>
     <div class="parent">
         <div class="container">
-
-        <MyButton value="Отменить заказ"/>
-        </div>
-        <div class="container">
-
-        <MyButton value="Начать продажу"/>
-
-        <MyButton value="Оплатить"/>
+            <slot></slot>    
         </div>
     </div>
 </template>
 
 <script setup>
-import MyButton from './MyButton.vue';
 </script>
 
 <style scoped>

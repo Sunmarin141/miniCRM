@@ -1,13 +1,14 @@
 <template>
     <div class="main-page">
-        <LeftPanel/>
-        <RightPanel/>
+        <LeftPanel />
+        <RightPanel />
     </div>
 </template>
 
 <script setup>
 import LeftPanel from '../LeftPanel.vue';
 import RightPanel from '../RightPanel.vue';
+
 </script>
 
 <style>

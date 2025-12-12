@@ -5,6 +5,7 @@
 
         </div>
         <div class="result-search">
+            
             <table class="search-table">
                 <thead>
                     <tr>
@@ -20,9 +21,12 @@
                     </tr>
                 </tbody>
             </table>
+
+            <p class="error">{{ errorMessage }}</p>
         </div>
 
         <div class="product-quantity">
+            
             <table class="quantity-table">
                 <thead>
                     <tr>
@@ -53,7 +57,8 @@ onMounted(()=>{
             const response = await api.get('goods');
             allGoods.value = response.data;
         }catch($error){
-            console.log($error);
+            errorMessage.value = $error.message;
+            console.log(errorMessage);
         }
     }
     query();
@@ -68,7 +73,7 @@ async function selectProduct(id){
 const allGoods = ref([]);
 const inputSearch = ref();
 const currentProduct = ref([]);
-
+const errorMessage = ref();
 const filteredGoods = computed(()=>{
     if(!inputSearch.value) return allGoods.value;
     return allGoods.value.filter((v) => v.title.toLowerCase().includes(inputSearch.value.toLowerCase()));
@@ -97,6 +102,12 @@ const filteredGoods = computed(()=>{
     background: white;
 }
 
+.error{
+    text-align: center;
+    font-size: 16px;
+    color: red;
+}
+
 .search-table{
     width: 100%;
     border-collapse: collapse;
@@ -116,6 +127,7 @@ const filteredGoods = computed(()=>{
 }
 
 .search-table td{
+    cursor: pointer;
     padding: 4px 8px;
     border-right: 1px solid #e0e0e0;
 }
