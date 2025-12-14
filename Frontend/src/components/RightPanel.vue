@@ -10,16 +10,24 @@
 <script setup>
 import ClientPage from './pages/ClientPage.vue';
 import Layout from './Layout.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import SearchPage from './pages/SearchPage.vue';
+import { useAuth } from '@/compaseble/useAuth';
 
-let currentPage = ref('Поиск');
+const {isLogin} = useAuth();
+const currentPage = ref('Поиск');
 
 function changePage(page){
     currentPage.value = page;
-    console.log(page);
-    console.log(currentPage);
 }
+
+watch(isLogin,(newLogin,oldValue)=>{
+    console.log(`Статус авторизации изменился: ${oldValue} → ${newLogin}`);
+    if(!newLogin){
+        currentPage.value = 'Поиск';
+    }
+})
+
 </script>
 
 <style scoped>
@@ -29,5 +37,6 @@ function changePage(page){
     margin: 5px;
     border: 1px dotted gray;
 }
+
 
 </style>

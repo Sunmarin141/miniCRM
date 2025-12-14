@@ -19,7 +19,7 @@ return new class extends Migration
             $table->tinyText('second_name');
             $table->tinyText('third_name');
             $table->tinyText('email');
-            $table->integer('bonuses');
+            $table->integer('bonuses')->default(0);
         });
     }
 

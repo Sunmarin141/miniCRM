@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import api from '../../../services/api';
 
 onMounted(()=>{

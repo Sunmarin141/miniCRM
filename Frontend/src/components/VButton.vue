@@ -1,32 +1,26 @@
 <template>
     <div>
-        <button ref="myBtn" v-on:click="$emit('state',props.value)">{{value}}</button>
-        
+        <button :disabled="isDisabled" v-on:click="$emit('state',props.value)">{{value}}</button>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { computed } from 'vue';
+import { useAuth } from '../compaseble/useAuth';
 const emit = defineEmits(['state'])
-const myBtn = ref(null);
-
+const isLogin = useAuth().isLogin;
 const props = defineProps({
     value:String, 
 })
-const isLogin = ref(Boolean(localStorage.getItem('token')));
-onMounted(()=>{
-    myBtn.value.disabled = !isLogin.value;
-
-    if(isLogin.value == false && props.value == "Начать продажу"){
-        myBtn.value.disabled = false;
-    }else if(isLogin.value == true && props.value == "Начать продажу"){
-        myBtn.value.disabled = true;
-    }
-    if(isLogin.value == false && props.value == "Поиск"){
-        myBtn.value.disabled = false;
-    }
-})
+const isDisabled = computed(() => {
+  if (props.value === "Начать продажу") {
+    return isLogin.value;
+  }
+  if (props.value === "Поиск") {
+    return false;
+  }
+  return !isLogin.value;
+});
 </script>
 
 <style scoped>
