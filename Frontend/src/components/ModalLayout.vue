@@ -37,27 +37,4 @@ const emit = defineEmits(['close']);
   font-family: "Arial", sans-serif;
 }
 
-::v-deep(.input-1c) {
-  width: 100%;
-  padding: 6px 8px;
-  margin: 10px 0;
-  border: 1px solid #a0a0a0;
-  background-color: #fff;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-::v-deep(.btn-submit) {
-  gap:10px;
-  padding: 6px 20px;
-  background-color: #e6e6e6;
-  color: #000;
-  border: 1px solid #a0a0a0;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.btn-submit:hover {
-  background-color: #d0d0d0;
-}
 </style>

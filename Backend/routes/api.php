@@ -17,7 +17,6 @@ Route::get('/goods/{id}',[GoodController::class,'show']);
 Route::post('/worker/login',[WorkerController::class,'index']);
 
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/client/register',[ClientController::class,'register']);
     Route::post('/client/phone',[ClientController::class,'findByPhone']);

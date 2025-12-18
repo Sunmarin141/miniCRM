@@ -12,16 +12,16 @@ class WorkerController extends Controller
         $request->validate([
             'code' => 'required',
         ]);
-
         $worker = Workers::where('login_code',$request->code)->first();
+        
         if(!$worker){
             return response()->json([
-                'status' => 'не правильные данные для входа',
+                'status' => '404',
             ]);
         }
         $token = $worker->createToken('auth-login')->plainTextToken;
         return response()->json([
-            'status' => "успешный вход",
+            'status' => "200",
             'token' => $token,
         ]);
     }

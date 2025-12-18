@@ -6,7 +6,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useAuth } from '../compaseble/useAuth';
+import { useAuth } from '../composable/useAuth';
 const emit = defineEmits(['state'])
 const isLogin = useAuth().isLogin;
 const props = defineProps({

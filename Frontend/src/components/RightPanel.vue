@@ -12,7 +12,7 @@ import ClientPage from './pages/ClientPage.vue';
 import Layout from './Layout.vue';
 import { ref, watch } from 'vue';
 import SearchPage from './pages/SearchPage.vue';
-import { useAuth } from '@/compaseble/useAuth';
+import { useAuth } from '@/composable/useAuth';
 
 const {isLogin} = useAuth();
 const currentPage = ref('Поиск');
