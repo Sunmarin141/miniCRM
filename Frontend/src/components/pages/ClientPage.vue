@@ -43,7 +43,7 @@
         </thead>
         <tbody></tbody>
       </table>
-      <p>история покупок пуста</p>
+      <p>история покупок в разработке</p>
     </div>
   </div>
   <div class="user-no-login" v-else>
@@ -58,12 +58,12 @@
 import VButton from '../VButton.vue'
 import ClientRegisterModal from './ClientRegisterModal.vue'
 import ModalLayout from '../ModalLayout.vue'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import api from '../../../services/api'
 const phone = ref(localStorage.getItem('phone'))
 const client = ref({})
 async function findByPhone() {
-  const response = await api.post('/client/phone', { phone: phone.value })
+  const response = await api.get(`/client/${phone.value}`)
   client.value = response.data.client;
 }
 

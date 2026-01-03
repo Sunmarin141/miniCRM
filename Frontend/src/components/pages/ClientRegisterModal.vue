@@ -43,34 +43,34 @@ function closeModal(){
 async function savePhone(){
   localStorage.setItem('phone',phone.value);
   if(await isHasAccount() == true){
-    console.log('res');
     closeModal();
+    emit('successfulRegistration');
     return;
   }
   currentStep.value = steps.value.enterInformation;
 }
 
-function registerClient(){
+async function registerClient(){
   const phone = localStorage.getItem('phone');
   console.log(phone);
-  api.post('/client/register',{
-    f_name: user.value.f_name,
-    s_name: user.value.s_name,
-    t_name: user.value.t_name,
+  await api.post('/client/register',{
+    first_name: user.value.f_name,
+    second_name: user.value.s_name,
+    third_name: user.value.t_name,
     phone: phone,
     email: user.value.email,
-  })
+  });
+  await isHasAccount();
   closeModal();
   emit('successfulRegistration');
 }
 
 async function isHasAccount(){
     const phone = localStorage.getItem('phone');
-    const response = await api.post('/client/phone', {
-        phone:phone,
-    })
+    const response = await api.get(`/client/${phone}`);
     const result = response.data;
     if(result.status == 200){
+      localStorage.setItem('client_id',result.client.id);
       return true;
     }
     return false;

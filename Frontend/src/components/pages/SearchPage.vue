@@ -33,13 +33,15 @@
                         <th>Магазин</th>
                         <th>Колличество</th>
                         <th>Цена</th>
+                        <th v-if="hasDiscount">Скидка</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="product in currentProduct"">
+                    <tr v-on:click="useSale.addProductToBuy(product.id,product.quantity)" v-for="product in currentProduct">
                         <td>{{product.store}}</td>
                         <td>{{ product.quantity }}</td>
                         <td>{{ product.price }}</td>
+                        <td v-if="product.discount>0">{{ product.discount }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -48,8 +50,20 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import api from '../../../services/api';
+import { useSaleStore } from '@/store/sale';
+import { useGoodStore } from '@/store/good';
+const allGoods = ref([]);
+const useGood = useGoodStore();
+const useSale = useSaleStore()
+const inputSearch = ref();
+const currentProduct = computed(()=> useGood.selectGood);
+const errorMessage = ref();
+const filteredGoods = computed(()=>{
+    if(!inputSearch.value) return allGoods.value;
+    return allGoods.value.filter((v) => v.title.toLowerCase().includes(inputSearch.value.toLowerCase()));
+})
 
 onMounted(()=>{
     async function query(){
@@ -67,17 +81,14 @@ onMounted(()=>{
 async function selectProduct(id){
     const response = await api.get(`/goods/${id}`);
     currentProduct.value = response.data.data;
-    console.log(currentProduct.value);
+    useGood.selectGood = response.data.data;
 }
 
-const allGoods = ref([]);
-const inputSearch = ref();
-const currentProduct = ref([]);
-const errorMessage = ref();
-const filteredGoods = computed(()=>{
-    if(!inputSearch.value) return allGoods.value;
-    return allGoods.value.filter((v) => v.title.toLowerCase().includes(inputSearch.value.toLowerCase()));
-})
+const hasDiscount = computed(()=> {
+    return currentProduct.value.some(product => product.discount > 0);
+});
+
+
 </script>
 
 <style scoped>
@@ -160,6 +171,9 @@ const filteredGoods = computed(()=>{
     background: #F5F5F5;
 }
 
+.quantity-table tbody tr{
+    cursor: pointer;
+}
 
 .quantity-table tbody tr:first-child td{
     border-top: none;

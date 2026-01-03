@@ -8,8 +8,13 @@ export function useAuth(){
         isLogin.value = true;
     }
 
+    const loginId = (worker_id) => {
+        localStorage.setItem('worker_id',worker_id);
+    }
+
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('worker_id');
         isLogin.value = false;
     }
 
@@ -17,5 +22,6 @@ export function useAuth(){
         isLogin,
         login,
         logout,
+        loginId,
     }
 }

@@ -3,29 +3,37 @@
         <ul>
             <li><div>
                 <span>Всего</span>
-                <span class="money">0</span>
+                <span class="money">{{ total }}</span>
             </div></li>
 
             <li><div>
                 <span>Скидка</span>
-                <span class="money">0</span>
+                <span class="money">{{ discount }}</span>
             </div></li>
 
             <li><div>
                 <span>Оплата</span>
-                <span class="money">0</span>
+                <span class="money">{{ toPaid }}</span>
             </div></li>
 
             <li><div>
                 <span>Бонусы за покупку</span>
-                <span class="money">0</span>
+                <span class="money">{{ bonus }}</span>
             </div></li>
         </ul>
     </div>
 </template>
 
 <script setup>
+import { useSaleStore } from '@/store/sale';
+import { computed } from 'vue';
 
+const saleStore = useSaleStore();
+
+const total = computed(()=>saleStore.totalPrice);
+const discount = computed(()=>saleStore.totalDiscount);
+const toPaid = computed(()=>saleStore.paid);
+const bonus = computed(()=>saleStore.bonus);
 </script>
 
 <style scoped>

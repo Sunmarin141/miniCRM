@@ -21,6 +21,7 @@ class GoodCollection extends ResourceCollection
                 'store' => $good->store->title,
                 'quantity' => $good->quantity,
                 'price' => $good->good->price,
+                'discount' => $good->good->discount,
             ];
         })->all();
     }

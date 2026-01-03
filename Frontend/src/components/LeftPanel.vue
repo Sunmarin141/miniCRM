@@ -7,7 +7,7 @@
     </ButtonsLayout>
     <ButtonsLayout>
       <VButton value="Начать продажу" @click="openModal"></VButton>
-      <VButton value="Оплатить"></VButton>
+      <VButton value="Оплатить" @click="completePurchase"></VButton>
     </ButtonsLayout>
 
     <ModalLayout :isOpen="isOpen">
@@ -19,6 +19,13 @@
         <p>{{ errorCode }}</p>
       </div>
       <ClientRegisterModal @close-modal="closeModel" v-if="currentStep==steps.registerClient"/>
+      <div v-if="currentStep==steps.completePurchase">
+        <h1>Спасибо за покупку</h1>
+        <div v-if="client_id">
+          <h2>На ваш аккаунт поступило {{ bonusPurchase }} бонусов</h2>
+        </div>
+        <button class="btn-submit" @click="closeModel">X</button>
+      </div>
     </ModalLayout>
     
   </div>
@@ -26,48 +33,46 @@
 
 <script setup>
 import ClientRegisterModal from './pages/ClientRegisterModal.vue';
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import HeaderResults from './HeaderResults.vue'
 import BodyPurchase from './BodyPurchase.vue'
 import ButtonsLayout from './ButtonsLayout.vue';
 import VButton from './VButton.vue';
+import { useGoodStore } from '@/store/good';
 import ModalLayout from './ModalLayout.vue';
 import api from '../../services/api';
 import { useAuth } from '../composable/useAuth';
-const {login,logout} = useAuth();
+import { useSaleStore } from '@/store/sale';
+const {login,logout,loginId} = useAuth();
 
 const isOpen = ref(false);
+const sale = useSaleStore();
+const good = useGoodStore();
 const errorCode = ref('');
 const currentStep = ref(1);
 const steps = ref({
   loginWorker: 1,
   registerClient: 2,
+  completePurchase:3,
 })
+const client_id = ref();
 const data = ref({
   code: '',
 });
+const bonusPurchase = ref('');
 
 async function logoutFn(){
+  await sale.deleteWorkerSale();
   try{
     await api.delete('/worker/logout');
   }finally{
     logout();
     localStorage.clear('phone');
+    sale.clearPurchase();
+    client_id.value = ''
   }
 }
 
-function registerClient(){
-  const phone = localStorage.getItem('phone');
-  console.log(phone);
-  api.post('/client/register',{
-    f_name: user.value.f_name,
-    s_name: user.value.s_name,
-    t_name: user.value.t_name,
-    phone: phone,
-    email: user.value.email,
-  })
-  isOpen.value = false;
-}
 
 function openModal(){
     isOpen.value = true;
@@ -89,7 +94,31 @@ async function startSelling(){
   errorCode.value = "";
   currentStep.value = steps.value.registerClient;
   login(result.token);
+  loginId(result.worker_id);
+  sale.getSales();
 }
+
+async function completePurchase(){
+  isOpen.value = true;
+  currentStep.value = 3;
+  let purchaseBody = sale.purchase.map((item) => ({
+    current_good_id: item.id,
+  }));
+  const purchase = JSON.stringify(purchaseBody);
+  const response = await api.post('/current-good/updateQuantity',purchase);
+  const result = await response.data;
+  good.selectGood = [];
+  client_id.value = localStorage.getItem('client_id');
+
+  if(client_id.value === null){
+    logoutFn();
+    return;
+  }
+  bonusPurchase.value = sale.bonus;
+  api.post(`/client/update/${client_id.value}`,{"bonuses":bonusPurchase.value});
+  sale.deleteWorkerSale();
+}
+
 </script>
 
 <style scoped>
